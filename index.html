@@ -101,16 +101,16 @@
       <div class="field">
         <label>Material turi</label>
         <select id="mat">
-          <option value="50000">Banner</option>
-          <option value="60000">Orakal</option>
-          <option value="70000">Prozrachniy orakal</option>
-          <option value="70000">Set orakal</option>
+          <option value="50000" data-w="1,1.2,1.5,1.7,3">Banner</option>
+          <option value="60000" data-w="1,1.5">Orakal</option>
+          <option value="70000" data-w="1">Prozrachniy orakal</option>
+          <option value="70000" data-w="1,1.2">Set orakal</option>
         </select>
       </div>
       <div class="row">
         <div class="field" style="margin:0">
           <label>Eni (metr)</label>
-          <input id="w" type="number" inputmode="decimal" value="1" min="0" step="0.1">
+          <select id="w"></select>
         </div>
         <div class="x">×</div>
         <div class="field" style="margin:0">
@@ -164,12 +164,18 @@
 const fmt = n => Math.round(n).toLocaleString('ru-RU').replace(/,/g,' ');
 
 const mat=document.getElementById('mat'),w=document.getElementById('w'),h=document.getElementById('h');
+function fillW(){
+  const ws=mat.selectedOptions[0].dataset.w.split(',');
+  w.innerHTML=ws.map(v=>`<option value="${v}">${v} metr</option>`).join('');
+}
 function calc(){
   const a=(parseFloat(w.value)||0)*(parseFloat(h.value)||0);
   document.getElementById('bprice').textContent=fmt(a*parseFloat(mat.value));
   document.getElementById('barea').textContent='Maydon: '+a.toFixed(2)+' m²  •  so\'m';
 }
-[mat,w,h].forEach(e=>e.addEventListener('input',calc));calc();
+mat.addEventListener('change',()=>{fillW();calc();});
+[w,h].forEach(e=>e.addEventListener('input',calc));
+fillW();calc();
 
 const narx=[["Banner 1 metr",50000],["Banner 1.2 metr",60000],["Banner 1.5 metr",75000],
   ["Banner 1.7 metr",85000],["Banner 3 metr",150000],["Orakal 1 metr",60000],
